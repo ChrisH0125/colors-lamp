@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>COLORS LAMP Application</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="js/code.js" defer></script>
+</head>
+<body>
+    <main class="page-shell">
+        <h1>COLORS LAMP Application</h1>
+
+        <form id="loginForm" class="panel" novalidate>
+            <h2>Log in</h2>
+
+            <label for="loginName">Username</label>
+            <input id="loginName" name="login" type="text" maxlength="50" autocomplete="username" required>
+
+            <label for="loginPassword">Password</label>
+            <input id="loginPassword" name="password" type="password" maxlength="50" autocomplete="current-password" required>
+
+            <button type="submit">Log in</button>
+            <p id="loginResult" class="status" role="status" aria-live="polite"></p>
+        </form>
+    </main>
+</body>
+</html>
+

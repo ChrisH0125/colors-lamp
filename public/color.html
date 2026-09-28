@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Manage Colors</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="js/code.js" defer></script>
+</head>
+<body>
+    <main class="page-shell">
+        <header class="page-header">
+            <div>
+                <h1>COLORS LAMP Application</h1>
+                <p id="userName"></p>
+            </div>
+            <button id="logoutButton" class="secondary" type="button">Log out</button>
+        </header>
+
+        <section class="panel" aria-labelledby="searchHeading">
+            <h2 id="searchHeading">Search colors</h2>
+            <form id="searchColorForm">
+                <label for="searchText">Color name</label>
+                <input id="searchText" name="search" type="search" maxlength="50">
+                <button type="submit">Search</button>
+            </form>
+            <p id="colorSearchResult" class="status" role="status" aria-live="polite"></p>
+            <ul id="colorList" class="color-list" aria-label="Matching colors"></ul>
+        </section>
+
+        <section class="panel" aria-labelledby="addHeading">
+            <h2 id="addHeading">Add a color</h2>
+            <form id="addColorForm">
+                <label for="colorText">Color name</label>
+                <input id="colorText" name="color" type="text" maxlength="50" required>
+                <button type="submit">Add color</button>
+            </form>
+            <p id="colorAddResult" class="status" role="status" aria-live="polite"></p>
+        </section>
+    </main>
+</body>
+</html>
+
