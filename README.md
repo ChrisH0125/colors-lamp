@@ -16,6 +16,7 @@ COLORS is a small educational web application built with the LAMP stack. A user 
 colors-lamp/
 |-- api/                 PHP API endpoints and shared configuration
 |-- database/            Database schema
+|-- docs/uml/            PlantUML sources and rendered UML diagrams
 |-- public/              Browser-facing HTML, CSS, JavaScript, and images
 |-- .env.example         Required environment variable names
 |-- .gitignore
@@ -93,6 +94,14 @@ All endpoints accept `POST` requests with JSON bodies:
 - `api/SearchColors.php` returns matching colors for a user.
 
 Database queries use prepared statements, and database credentials are supplied through environment variables rather than source code.
+
+## UML documentation
+
+The architecture and behavior of the implemented application are documented in [`docs/uml`](docs/uml/README.md):
+
+- [Use case diagram](docs/uml/usecase.png) and [PlantUML source](docs/uml/usecase.puml)
+- [Activity diagram](docs/uml/activity.png) and [PlantUML source](docs/uml/activity.puml)
+- [Class diagram](docs/uml/class.png) and [PlantUML source](docs/uml/class.puml)
 
 ## Assumptions and limitations
 

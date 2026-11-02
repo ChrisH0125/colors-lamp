@@ -1,0 +1,113 @@
+@startuml
+title COLORS Web Application - Class Diagram
+
+!pragma layout smetana
+top to bottom direction
+
+skinparam backgroundColor #FFFFFF
+skinparam defaultFontName Helvetica
+skinparam defaultFontColor #172033
+skinparam shadowing false
+skinparam class {
+  BackgroundColor #F8FAFC
+  BorderColor #1F4E79
+  ArrowColor #52677A
+  HeaderBackgroundColor #DCEAF3
+  StereotypeFontColor #4B6173
+}
+skinparam package {
+  BackgroundColor #FFFFFF
+  BorderColor #A7B4C0
+  FontColor #172033
+}
+
+package "Browser Client" {
+  class BrowserApp <<JavaScript module>> {
+    - API_BASE : String
+    - SESSION_COOKIE : String
+    - SESSION_SECONDS : Number
+    - currentUser : UserSession [0..1]
+    --
+    + handleLogin(event : SubmitEvent) : Promise<void>
+    + addColor(event : SubmitEvent) : Promise<void>
+    + searchColors(event : SubmitEvent) : Promise<void>
+    + apiRequest(endpoint : String, payload : Object) : Promise<Object>
+    + saveSession(user : UserSession) : void
+    + readSession() : UserSession [0..1]
+    + logOut() : void
+    + setStatus(element : HTMLElement, message : String, success : Boolean) : void
+  }
+
+  class UserSession <<value object>> {
+    + id : Integer
+    + firstName : String
+    + lastName : String
+  }
+}
+
+package "PHP API" {
+  class LoginEndpoint <<PHP script>> {
+    + POST(login : String, password : String) : JSON
+  }
+
+  class AddColorEndpoint <<PHP script>> {
+    + POST(userId : Integer, color : String) : JSON
+  }
+
+  class SearchColorsEndpoint <<PHP script>> {
+    + POST(userId : Integer, search : String) : JSON
+  }
+
+  class ApiBootstrap <<PHP module>> {
+    + requirePostRequest() : void
+    + readJsonRequest() : Array
+    + databaseConnection() : mysqli
+    + requiredEnvironmentValue(name : String) : String
+    + respondAndExit(payload : Array, status : Integer) : never
+  }
+}
+
+package "MySQL Data Model" {
+  class User <<Users table>> {
+    + ID : INT <<PK>>
+    + FirstName : VARCHAR(50)
+    + LastName : VARCHAR(50)
+    + Login : VARCHAR(50) <<unique>>
+    + Password : VARCHAR(50)
+  }
+
+  class Color <<Colors table>> {
+    + ID : INT <<PK>>
+    + Name : VARCHAR(50)
+    + UserID : INT <<FK>>
+  }
+}
+
+BrowserApp "1" o-- "0..1" UserSession : current session
+
+BrowserApp ..> LoginEndpoint : POST JSON
+BrowserApp ..> AddColorEndpoint : POST JSON
+BrowserApp ..> SearchColorsEndpoint : POST JSON
+
+LoginEndpoint ..> ApiBootstrap : uses
+AddColorEndpoint ..> ApiBootstrap : uses
+SearchColorsEndpoint ..> ApiBootstrap : uses
+
+LoginEndpoint ..> User : SELECT
+AddColorEndpoint ..> Color : INSERT
+SearchColorsEndpoint ..> Color : SELECT
+
+User "1" -- "0..*" Color : owns via UserID
+
+note bottom of BrowserApp
+  The implementation is procedural JavaScript and PHP.
+  Module and script stereotypes document static
+  responsibilities; they do not imply literal PHP classes.
+end note
+
+note right of Color
+  Colors.UserID is a foreign key to Users.ID.
+  Deleting a User cascades to owned Colors rows.
+end note
+
+@enduml

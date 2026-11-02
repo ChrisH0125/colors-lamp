@@ -22,10 +22,8 @@ skinparam rectangle {
   BorderColor #6B7F90
 }
 
-actor Visitor
+actor "Unauthenticated User" as Visitor
 actor "Logged-in User" as LoggedInUser
-
-LoggedInUser --|> Visitor
 
 rectangle "COLORS Web Application" {
   usecase "Log in" as UC_Login
