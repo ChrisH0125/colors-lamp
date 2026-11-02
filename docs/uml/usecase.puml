@@ -1,0 +1,52 @@
+@startuml
+title COLORS Web Application - Use Case Diagram
+
+!pragma layout smetana
+left to right direction
+
+skinparam backgroundColor #FFFFFF
+skinparam defaultFontName Helvetica
+skinparam defaultFontColor #172033
+skinparam shadowing false
+skinparam actor {
+  BorderColor #1F4E79
+  FontColor #172033
+}
+skinparam usecase {
+  BackgroundColor #EAF3F8
+  BorderColor #1F4E79
+  ArrowColor #52677A
+}
+skinparam rectangle {
+  BackgroundColor #F8FAFC
+  BorderColor #6B7F90
+}
+
+actor Visitor
+actor "Logged-in User" as LoggedInUser
+
+LoggedInUser --|> Visitor
+
+rectangle "COLORS Web Application" {
+  usecase "Log in" as UC_Login
+  usecase "Search own colors" as UC_Search
+  usecase "Add a color" as UC_Add
+  usecase "Log out" as UC_Logout
+}
+
+Visitor --> UC_Login
+LoggedInUser --> UC_Search
+LoggedInUser --> UC_Add
+LoggedInUser --> UC_Logout
+
+note bottom of LoggedInUser
+  A logged-in user is identified by the
+  client-side COLORS session cookie.
+end note
+
+note right of UC_Search
+  The search returns only Colors rows
+  associated with the current user ID.
+end note
+
+@enduml
