@@ -1,0 +1,133 @@
+@startuml
+title COLORS Web Application - Activity Diagram
+
+skinparam backgroundColor #FFFFFF
+skinparam defaultFontName Helvetica
+skinparam defaultFontColor #172033
+skinparam shadowing false
+skinparam activity {
+  BackgroundColor #EAF3F8
+  BorderColor #1F4E79
+  DiamondBackgroundColor #FFF4D6
+  DiamondBorderColor #9A6A00
+  ArrowColor #52677A
+  StartColor #1F4E79
+  EndColor #1F4E79
+}
+skinparam swimlane {
+  BorderColor #A7B4C0
+  TitleBackgroundColor #E2E8F0
+  TitleFontColor #172033
+}
+
+|User|
+start
+:Open the COLORS application;
+
+repeat
+  :Enter username and password;
+  :Submit login form;
+
+  |Browser|
+  if (Both fields provided?) then (yes)
+    :POST login and password\nto /api/Login.php;
+
+    |PHP API|
+    :Require POST and parse JSON;
+    :Validate login and password;
+    :Prepare parameterized user query;
+
+    |MySQL|
+    :SELECT matching Users row;
+
+    |PHP API|
+    if (User found?) then (yes)
+      :Return user ID and name as JSON;
+
+      |Browser|
+      :Save 20-minute client session cookie;
+      :Navigate to color.html;
+    else (no)
+      :Return 401 login error;
+
+      |Browser|
+      :Display login error;
+    endif
+  else (no)
+    :Display required-fields message;
+  endif
+
+  |User|
+repeat while (Login successful?) is (no) not (yes)
+
+|Browser|
+:Read session cookie and show user name;
+
+note right
+  Direct access to color.html without a valid
+  cookie redirects the browser to index.html.
+end note
+
+repeat
+  |User|
+  :Choose Search, Add, or Log out;
+
+  if (Search selected?) then (yes)
+    :Enter optional search text;
+    :Submit search form;
+
+    |Browser|
+    :POST search and current user ID\nto /api/SearchColors.php;
+
+    |PHP API|
+    :Validate user ID and search length;
+    :Prepare parameterized color query;
+
+    |MySQL|
+    :SELECT Colors rows matching\nsearch text and UserID;
+
+    |PHP API|
+    :Return results array as JSON;
+
+    |Browser|
+    :Render matching colors or\n"No matching colors found";
+  else (no)
+    |User|
+    if (Add selected?) then (yes)
+      :Enter a color name;
+      :Submit add form;
+
+      |Browser|
+      if (Color name provided?) then (yes)
+        :POST color and current user ID\nto /api/AddColor.php;
+
+        |PHP API|
+        :Validate user ID and color name;
+        :Prepare parameterized insert;
+
+        |MySQL|
+        :INSERT Colors row;
+
+        |PHP API|
+        :Return 201 success response;
+
+        |Browser|
+        :Clear input and display confirmation;
+      else (no)
+        :Display color-required message;
+      endif
+    else (Log out)
+      |User|
+      :Select Log out;
+    endif
+  endif
+
+  |User|
+repeat while (Search or Add completed?) is (yes) not (no)
+
+|Browser|
+:Delete the session cookie;
+:Return to index.html;
+
+stop
+@enduml
