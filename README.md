@@ -9,6 +9,7 @@ COLORS is a small educational web application built with the LAMP stack. A user 
 - MySQL
 - PHP 8.1 or newer with the `mysqli` extension
 - HTML, CSS, and vanilla JavaScript
+- Node.js 26 for development-only linting
 
 ## Project structure
 
@@ -94,6 +95,19 @@ All endpoints accept `POST` requests with JSON bodies:
 - `api/SearchColors.php` returns matching colors for a user.
 
 Database queries use prepared statements, and database credentials are supplied through environment variables rather than source code.
+
+## Continuous integration
+
+GitHub Actions runs HTMLHint, Stylelint, and ESLint on every push and pull request. Node.js is used only for these development tools; it does not run the LAMP application.
+
+Install the pinned lint dependencies and run all checks locally:
+
+```bash
+npm ci
+npm run lint
+```
+
+Individual checks are also available through `npm run lint:html`, `npm run lint:css`, and `npm run lint:js`.
 
 ## UML documentation
 

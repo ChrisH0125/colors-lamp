@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
 
-    document.getElementById('userName').textContent =
+    document.getElementById('user-name').textContent =
         `Logged in as ${currentUser.firstName} ${currentUser.lastName}`;
     document.getElementById('logoutButton').addEventListener('click', logOut);
     document.getElementById('searchColorForm').addEventListener('submit', searchColors);
@@ -119,7 +119,7 @@ async function apiRequest(endpoint, payload) {
     try {
         data = await response.json();
     } catch (error) {
-        throw new Error('The server returned an invalid response.');
+        throw new Error('The server returned an invalid response.', { cause: error });
     }
 
     if (!response.ok || data.error) {
@@ -149,7 +149,7 @@ function readSession() {
     try {
         const user = JSON.parse(decodeURIComponent(cookie.slice(prefix.length)));
         return Number.isInteger(user.id) && user.id > 0 ? user : null;
-    } catch (error) {
+    } catch {
         return null;
     }
 }
